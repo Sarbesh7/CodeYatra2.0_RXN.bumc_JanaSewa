@@ -13,7 +13,7 @@ function NavBar() {
     <nav className="navbar">
       <div className="navbar-brand">
         <NavLink
-          to="/">JanSewa</NavLink>
+          to="/">JanaSewa</NavLink>
         </div>
       
       {/* Mobile menu button */}

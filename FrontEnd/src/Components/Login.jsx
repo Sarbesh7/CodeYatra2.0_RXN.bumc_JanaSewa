@@ -46,7 +46,7 @@ const Login = () => {
     email,
     password,
   }) => {
-    const res = await fetch("http://127.0.0.1:8000/login", {
+    const res = await fetch("http://127.0.0.1:5000/login", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -85,7 +85,7 @@ const Login = () => {
     password})=> {
   
   
-    const res = await fetch("http://127.0.0.1:8000/users", {
+    const res = await fetch("http://127.0.0.1:5000/users", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ name, email, password }),
