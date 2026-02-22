@@ -4,8 +4,10 @@ import { GoGlobe } from "react-icons/go";
 import { RiBankLine } from "react-icons/ri";
 import { FaIdCard, FaLandmark, FaMapMarkerAlt, FaRegBuilding } from "react-icons/fa";
 import { PiGraduationCap } from "react-icons/pi";
+import { useNavigate } from "react-router-dom";
 
 export default function AllServices() {
+    const Navigate = useNavigate();
   const services = [
     {
       title: "Citizenship",
@@ -68,7 +70,7 @@ export default function AllServices() {
               </div>
               <h2 className="mt-4 text-lg font-semibold -py- ">{service.title}</h2>
               <p className="text-gray-600 text-sm mt-2 ">{service.desc}</p>
-              <button className="mt-4 px-4 py-2 bg-white border rounded-md hover:bg-gray-100 text-gray-700 shadow-sm">
+              <button onClick={()=>Navigate('/form')} className="mt-4 px-4 py-2 bg-white border rounded-md hover:bg-gray-100 text-gray-700 shadow-sm cursor-pointer">
                 View Details
               </button>
             </div>

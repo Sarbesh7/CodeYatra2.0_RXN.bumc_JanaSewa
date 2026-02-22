@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate, useRoutes } from "react-router-dom";
 import { IoMdSearch } from "react-icons/io";
 import { FaArrowRight } from "react-icons/fa";
 import { FaWpforms } from "react-icons/fa6";
@@ -9,6 +9,7 @@ import { GoGlobe } from "react-icons/go";
 import { RiBankLine } from "react-icons/ri";
 
 function Home() {
+    const Navigate = useNavigate();
   return (
     <>
       {/* Hero */}
@@ -22,7 +23,7 @@ function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 mt-6 items-center justify-center">
-            <button className="inline-flex items-center gap-2 py-2.5 px-5 rounded-lg font-semibold text-[0.95rem] bg-white text-[#1b5aa7] shadow-md hover:-translate-y-0.5 transition-transform">
+            <button onClick={()=>Navigate('/services')} className="cursor-pointer inline-flex items-center gap-2 py-2.5 px-5 rounded-lg font-semibold text-[0.95rem] bg-white text-[#1b5aa7] shadow-md hover:-translate-y-0.5 transition-transform">
               <span>Explore Services</span>
               <FaArrowRight className="inline-flex items-center" />
             </button>
@@ -142,7 +143,7 @@ function Home() {
               </div>
             </div>
             <div className="flex justify-center mt-8">
-              <button className="px-6 py-2 rounded-md bg-white text-gray-700 font-medium hover:bg-gray-50 inline-flex items-center gap-2 border border-gray-200">
+              <button onClick={() => Navigate('/services')} className="px-6 py-2 rounded-md bg-white text-gray-700 font-medium hover:bg-gray-50 inline-flex items-center gap-2 border border-gray-200">
                 View All Services{" "}
                 <FaArrowRight className="text-gray-500 text-lg ml-2" />
               </button>
