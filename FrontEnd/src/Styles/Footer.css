@@ -1,0 +1,40 @@
+
+footer{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color:#2b5da9;
+    color: white;
+}
+.footer-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+   
+
+}
+.info{
+    margin-left: 20px;
+}
+.footer-heads{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.contact{
+    margin-right: 20px;
+}
+
+hr{
+    margin-top: 20px;
+}
+
+.footer-copyright{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: red; */
+    height: 10vh;   
+
+   
+}
