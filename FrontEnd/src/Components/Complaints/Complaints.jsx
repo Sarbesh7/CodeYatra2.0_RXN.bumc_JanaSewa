@@ -26,7 +26,7 @@ export default function ComplaintForm() {
   };
 
   return (
-    <div className="form-container">
+    <div className="form-container Container min-h-[60vh]">
         <div className="header-line">
       <h2>File a Complaint</h2>
         </div>

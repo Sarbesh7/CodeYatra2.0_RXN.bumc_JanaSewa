@@ -1,1 +1,35 @@
 @import "tailwindcss";
+
+.Container{
+    padding-inline: 1rem;
+}
+
+@media (min-width: 640px) {
+    .Container {
+        padding-inline: 2rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .Container {
+        padding-inline: 4rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .Container {
+        padding-inline: 8rem;
+    }
+}
+
+@media (min-width: 1280px) {
+    .Container {
+        padding-inline: 12rem;
+    }
+}
+
+@media (min-width: 1536px) {
+    .Container {
+        padding-inline: 20rem;
+    }
+}

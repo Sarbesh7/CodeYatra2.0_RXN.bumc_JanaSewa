@@ -3,9 +3,10 @@
   flex-direction: column;
   align-items: center;
   gap: 16px;
-  padding: 32px 16px;
+  padding-top: 32px;
+  padding-bottom: 32px;
   background: #f5f6f8;
-  min-height: 60vh;
+  min-height: calc(100vh - 280px);
 }
 
 .track-title {

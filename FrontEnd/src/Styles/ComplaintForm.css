@@ -2,7 +2,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 0;
+  padding: 40px 1rem;
+  min-height: calc(100vh - 280px);
   background-color: #f5f6f8;
 }
 
@@ -22,7 +23,8 @@ margin-bottom: 20px;
   background: white;
   padding: 25px;
   border-radius: 8px;
-  width: 400px;
+  width: 100%;
+  max-width: 400px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
@@ -66,4 +68,16 @@ textarea:focus {
 
 .submit-btn:hover {
   background-color: #244f91;
+}
+
+/* Example for FileComplaint.css */
+.file-complaint-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding-top: 32px;
+  padding-bottom: 32px;
+  background: #f5f6f8;
+  min-height: calc(100vh - 280px); /* Adjust 280px if your footer/header size changes */
 }

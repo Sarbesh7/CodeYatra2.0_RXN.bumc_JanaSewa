@@ -11,7 +11,7 @@ export default function TrackApplication() {
   };
 
   return (
-    <div className="track-container">
+    <div className="track-container Container">
       <h1 className="track-title">Track Your Application</h1>
 
       <div className="track-card">
