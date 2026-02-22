@@ -1,0 +1,69 @@
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 0;
+  background-color: #f5f6f8;
+}
+
+h2 {
+margin-bottom: 20px;
+}
+.header-line {
+ /* background: red; */
+ display: flex;
+ font-size: 24px;
+ font-weight: bold;
+ color: black;
+
+}
+
+.complaint-card {
+  background: white;
+  padding: 25px;
+  border-radius: 8px;
+  width: 400px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.form-group {
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-size: 14px;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+select,
+textarea,
+input[type="file"] {
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #2b5da9;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #2b5da9;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.submit-btn:hover {
+  background-color: #244f91;
+}
