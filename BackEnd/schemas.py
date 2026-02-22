@@ -1,5 +1,6 @@
 from pydantic import BaseModel, ConfigDict
 from typing import Optional
+from datetime import date, datetime
 
 
 class User(BaseModel):
@@ -27,3 +28,31 @@ class Token(BaseModel):
     token_type: str
     role: str
     redirect_to: str
+
+
+# Citizenship Application Schemas
+class CitizenshipApplicationCreate(BaseModel):
+    applicant_name: str
+    permanent_district: str
+    ward_no: int
+    municipality: str
+    date_of_birth: date
+    father_name: str
+    mother_name: str
+    gender: str
+
+
+class CitizenshipApplicationResponse(BaseModel):
+    id: int
+    user_id: int
+    applicant_name: str
+    permanent_district: str
+    ward_no: int
+    municipality: str
+    date_of_birth: date
+    father_name: str
+    mother_name: str
+    gender: str
+    status: str
+    created_at: datetime
+    model_config = ConfigDict(from_attributes=True)
