@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import NavBar from './Components/NavBar/NavBar'
+import ComplaintForm from './Components/Complaints/Complaints'
 
 function App()  {
   return (
