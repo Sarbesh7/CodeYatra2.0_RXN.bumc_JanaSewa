@@ -122,3 +122,101 @@ def admin_dashboard(current_user: models.User = Depends(get_current_user)):
 @app.get("/user_dashboard", tags=['user'])
 def user_dashboard(current_user: models.User = Depends(get_current_user)):
     return RedirectResponse(url="http://localhost:5173/", status_code=302)
+
+
+# ================== CITIZENSHIP APPLICATION ENDPOINTS ==================
+
+@app.post("/citizenship", response_model=schemas.CitizenshipApplicationResponse, tags=['citizenship'])
+def create_citizenship_application(
+    application: schemas.CitizenshipApplicationCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    """Create a new citizenship application for the logged-in user"""
+    new_application = models.CitizenshipApplication(
+        user_id=current_user.id,
+        applicant_name=application.applicant_name,
+        permanent_district=application.permanent_district,
+        ward_no=application.ward_no,
+        municipality=application.municipality,
+        date_of_birth=application.date_of_birth,
+        father_name=application.father_name,
+        mother_name=application.mother_name,
+        gender=application.gender
+    )
+    db.add(new_application)
+    db.commit()
+    db.refresh(new_application)
+    return new_application
+
+
+@app.get("/citizenship", response_model=list[schemas.CitizenshipApplicationResponse], tags=['citizenship'])
+def get_user_citizenship_applications(
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    """Get all citizenship applications for the logged-in user"""
+    applications = db.query(models.CitizenshipApplication).filter(
+        models.CitizenshipApplication.user_id == current_user.id
+    ).all()
+    return applications
+
+
+@app.get("/citizenship/{application_id}", response_model=schemas.CitizenshipApplicationResponse, tags=['citizenship'])
+def get_citizenship_application(
+    application_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    """Get a specific citizenship application by ID"""
+    application = db.query(models.CitizenshipApplication).filter(
+        models.CitizenshipApplication.id == application_id,
+        models.CitizenshipApplication.user_id == current_user.id
+    ).first()
+    
+    if not application:
+        raise HTTPException(status_code=404, detail="Application not found")
+    return application
+
+
+@app.get("/admin/citizenship", response_model=list[schemas.CitizenshipApplicationResponse], tags=['admin'])
+def get_all_citizenship_applications(
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    """Admin endpoint: Get all citizenship applications"""
+    if not current_user.is_admin:
+        raise HTTPException(status_code=403, detail="Access forbidden: Admins only")
+    
+    applications = db.query(models.CitizenshipApplication).all()
+    return applications
+
+
+@app.put("/admin/citizenship/{application_id}/status", response_model=schemas.CitizenshipApplicationResponse, tags=['admin'])
+def update_citizenship_status(
+    application_id: int,
+    status: str,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    """Admin endpoint: Update citizenship application status (pending/approved/rejected)"""
+    if not current_user.is_admin:
+        raise HTTPException(status_code=403, detail="Access forbidden: Admins only")
+    
+    if status not in ["pending", "approved", "rejected"]:
+        raise HTTPException(status_code=400, detail="Invalid status. Use: pending, approved, or rejected")
+    
+    application = db.query(models.CitizenshipApplication).filter(
+        models.CitizenshipApplication.id == application_id
+    ).first()
+    
+    if not application:
+        raise HTTPException(status_code=404, detail="Application not found")
+    
+    application.status = status
+    db.commit()
+    db.refresh(application)
+    return application
+
+
+
