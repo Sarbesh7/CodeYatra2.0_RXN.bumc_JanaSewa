@@ -1,3 +1,91 @@
+/* Contact page custom styles */
+.contact-page {
+  min-height: 80vh;
+  background: #f9f9f9;
+  padding: 2rem;
+}
+
+.contact-header h2 {
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+.contact-header p {
+  color: #555;
+}
+
+.contact-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+}
+
+.contact-info {
+  flex: 1 1 300px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #eee;
+  padding: 1.5rem;
+}
+
+.contact-info h3 {
+  color: #2980b9;
+}
+
+.contact-info ul {
+  list-style: none;
+  padding: 0;
+  color: #444;
+}
+
+.contact-form {
+  flex: 1 1 350px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #eee;
+  padding: 1.5rem;
+}
+
+.contact-form h3 {
+  color: #2980b9;
+}
+
+.contact-form .form-group {
+  margin-bottom: 1rem;
+}
+
+.contact-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.contact-form .submit-btn {
+  background: #2980b9;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.contact-form .submit-btn:hover {
+  background: #2471a3;
+}
+
 .form-container {
   display: flex;
   flex-direction: column;
@@ -8,14 +96,15 @@
 }
 
 h2 {
-margin-bottom: 20px;
+  margin-bottom: 20px;
 }
+
 .header-line {
- /* background: red; */
- display: flex;
- font-size: 24px;
- font-weight: bold;
- color: black;
+  /* background: red; */
+  display: flex;
+  font-size: 24px;
+  font-weight: bold;
+  color: black;
 
 }
 
@@ -79,5 +168,6 @@ textarea:focus {
   padding-top: 32px;
   padding-bottom: 32px;
   background: #f5f6f8;
-  min-height: calc(100vh - 280px); /* Adjust 280px if your footer/header size changes */
+  min-height: calc(100vh - 280px);
+  /* Adjust 280px if your footer/header size changes */
 }

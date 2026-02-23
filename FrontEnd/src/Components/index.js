@@ -9,6 +9,7 @@ import Home from "./home/Home";
 import GovernmentNotices from "./Notices/Notices";
 import ApplyForm from "./ApplyForm/ApplyForm";
 import { AdminDashboard, AdminApplications, AdminServices } from "./Admin";
+import ContactUs from "./ContactUS/ContactUs";
 
 export {
   NavBar,
@@ -23,7 +24,8 @@ export {
   ApplyForm,
   AdminDashboard,
   AdminApplications,
-  AdminServices
+  AdminServices,
+  ContactUs
 };
 
 

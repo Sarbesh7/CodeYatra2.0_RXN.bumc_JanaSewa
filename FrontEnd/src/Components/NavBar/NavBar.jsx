@@ -117,7 +117,7 @@ function NavBar() {
               <div
                 className="profile-dropdown-item"
                 onClick={() => {
-                  navigate("/contact-us");
+                  navigate("/ContactUs");
                   closeProfileMenu();
                 }}
               >
