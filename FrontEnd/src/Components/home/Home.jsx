@@ -39,7 +39,7 @@ function Home() {
         </div>
       </div>
 
-      {/* Content */}
+      {/* Content sada*/}
       <div className="bg-gray-50 py-12">
         <div className="Container">
           {/* Features Section */}
