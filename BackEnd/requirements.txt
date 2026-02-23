@@ -1,7 +1,26 @@
-fastapi 
-uvicorn
+# ===========================================
+# JanaSewa Backend Dependencies
+# ===========================================
+# Install: pip install -r requirements.txt
+# ===========================================
+
+# Web Framework
+fastapi
+uvicorn[standard]
+
+# Data Validation
 pydantic
+pydantic-settings
+email-validator
+
+# Database
 sqlalchemy
-psycopg2
+psycopg2-binary
+
+# Authentication & Security
 bcrypt
-python-jose
+python-jose[cryptography]
+python-multipart
+
+# Configuration
+python-dotenv

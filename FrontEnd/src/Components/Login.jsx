@@ -1,7 +1,10 @@
 import { useState } from "react";
 import logo1 from '../assets/facebook-app-symbol.png'
 import logo2 from '../assets/google.png'
+import { useNavigate } from "react-router-dom";
+import animationData from "../assets/animations/loading.json"
 const Login = () => {
+  const Navigate = useNavigate()
   const [slide, setSlide] = useState(false);
   const [pop, setPop] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
@@ -43,7 +46,7 @@ const Login = () => {
     email,
     password,
   }) => {
-    const res = await fetch("http://127.0.0.1:8000/login", {
+    const res = await fetch("http://127.0.0.1:5000/login", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -61,7 +64,7 @@ const Login = () => {
       setLoading(true);
       const res = await loginApi({ email: emailS, password: passwordS });
       localStorage.setItem("token", res.token);
-    //   navigate("/dashboard");
+      Navigate("/");
       
 
     } catch (err) {
@@ -82,7 +85,7 @@ const Login = () => {
     password})=> {
   
   
-    const res = await fetch("http://127.0.0.1:8000/users", {
+    const res = await fetch("http://127.0.0.1:5000/users", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ name, email, password }),
@@ -136,6 +139,11 @@ const Login = () => {
         <div className="w-[90%] h-[55%] md:w-[70%] md:h-[80%] border rounded-2xl border-none bg-white flex flex-wrap   relative shadow-[0_25px_60px_-15px_rgba(0,0,0,0.25)] overflow-hidden">
           {loading && (
             <div className="w-full h-full flex justify-center items-center bg-[#D1E8E4] absolute z-40">
+                <Lottie
+      animationData={animationData}
+      loop={true}
+      className="w-full h-full"
+    />
                 </div>
                 )}
        { tick && ( <div className="w-full h-full flex justify-center items-center bg-[#D1E8E4] absolute z-40"> 
