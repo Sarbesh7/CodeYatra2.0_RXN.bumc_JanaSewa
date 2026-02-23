@@ -13,7 +13,8 @@ import {
   AdminDashboard,
   AdminApplications,
   AdminServices,
-  ContactUs
+  ContactUs,
+  TemplateEditor
 } from "./Components/index";
 
 import Personaldetails from "./Components/Profile/Personal-Details/Personaldetails";

@@ -2,6 +2,7 @@ import { useState } from "react";
 import logo1 from '../assets/facebook-app-symbol.png'
 import logo2 from '../assets/google.png'
 import { useNavigate } from "react-router-dom";
+import Lottie from "lottie-react";
 import animationData from "../assets/animations/loading.json"
 const Login = () => {
   const Navigate = useNavigate()
@@ -46,7 +47,7 @@ const Login = () => {
     email,
     password,
   }) => {
-    const res = await fetch("http://127.0.0.1:5000/login", {
+    const res = await fetch("http://127.0.0.1:5000/api/auth/login", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -61,7 +62,9 @@ const Login = () => {
     try {
       setLoading(true);
       const res = await loginApi({ email: emailS, password: passwordS });
-      localStorage.setItem("token", res.token);
+      localStorage.setItem("access_token", res.access_token);
+      localStorage.setItem("user_role", res.role);
+      localStorage.setItem("user_name", res.user_name);
       Navigate("/");
       
 
@@ -83,7 +86,7 @@ const Login = () => {
     password})=> {
   
   
-    const res = await fetch("http://127.0.0.1:5000/users", {
+    const res = await fetch("http://127.0.0.1:5000/api/auth/register", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ full_name: name, email, password, role: "citizen" }),

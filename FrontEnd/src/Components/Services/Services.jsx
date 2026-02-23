@@ -19,57 +19,57 @@ export default function AllServices() {
     {
       title: t.citizenship,
       description: t.citizenshipDesc,
-      icon: <FaIdCard className="text-blue-600 text-3xl" />,
+      icon: <FaIdCard className="text-3xl" style={{ color: '#1b5AA7' }} />,
     },
     {
       title: t.license,
       description: t.licenseDesc,
-      icon: <LuCar className="text-blue-600 text-3xl" />,
+      icon: <LuCar className="text-3xl" style={{ color: '#1b5AA7' }} />,
     },
     {
       title: t.passport,
       description: t.passportDesc,
-      icon: <GoGlobe className="text-blue-600 text-3xl" />,
+      icon: <GoGlobe className="text-3xl" style={{ color: '#1b5AA7' }} />,
     },
     {
       title: t.taxRevenue,
       description: t.taxRevenueDesc,
-      icon: <RiBankLine className="text-blue-600 text-3xl" />,
+      icon: <RiBankLine className="text-3xl" style={{ color: '#1b5AA7' }} />,
     },
     {
       title: t.propertyLand,
       description: t.propertyLandDesc,
-      icon: <FaMapMarkerAlt className="text-blue-600 text-3xl" />,
+      icon: <FaMapMarkerAlt className="text-3xl" style={{ color: '#1b5AA7' }} />,
     },
     {
       title: t.wardServices,
       description: t.wardServicesDesc,
-      icon: <FaRegBuilding className="text-blue-600 text-3xl" />,
+      icon: <FaRegBuilding className="text-3xl" style={{ color: '#1b5AA7' }} />,
     },
     {
       title: t.municipalityServices,
       description: t.municipalityServicesDesc,
-      icon: <FaLandmark className="text-blue-600 text-3xl" />,
+      icon: <FaLandmark className="text-3xl" style={{ color: '#1b5AA7' }} />,
     },
     {
       title: t.scholarships,
       description: t.scholarshipsDesc,
-      icon: <PiGraduationCap className="text-blue-600 text-3xl" />,
+      icon: <PiGraduationCap className="text-3xl" style={{ color: '#1b5AA7' }} />,
     },
   ];
 
   // Icon mapping by title keyword
   const getIcon = (title) => {
     const titleLower = title.toLowerCase();
-    if (titleLower.includes("citizenship")) return <FaIdCard className="text-blue-600 text-3xl" />;
-    if (titleLower.includes("license") || titleLower.includes("yatayat")) return <LuCar className="text-blue-600 text-3xl" />;
-    if (titleLower.includes("passport")) return <GoGlobe className="text-blue-600 text-3xl" />;
-    if (titleLower.includes("tax") || titleLower.includes("revenue")) return <RiBankLine className="text-blue-600 text-3xl" />;
-    if (titleLower.includes("land") || titleLower.includes("property")) return <FaMapMarkerAlt className="text-blue-600 text-3xl" />;
-    if (titleLower.includes("ward")) return <FaRegBuilding className="text-blue-600 text-3xl" />;
-    if (titleLower.includes("municipality")) return <FaLandmark className="text-blue-600 text-3xl" />;
-    if (titleLower.includes("scholarship")) return <PiGraduationCap className="text-blue-600 text-3xl" />;
-    return <FaRegBuilding className="text-blue-600 text-3xl" />;
+    if (titleLower.includes("citizenship")) return <FaIdCard className="text-3xl" style={{ color: '#1b5AA7' }} />;
+    if (titleLower.includes("license") || titleLower.includes("yatayat")) return <LuCar className="text-3xl" style={{ color: '#1b5AA7' }} />;
+    if (titleLower.includes("passport")) return <GoGlobe className="text-3xl" style={{ color: '#1b5AA7' }} />;
+    if (titleLower.includes("tax") || titleLower.includes("revenue")) return <RiBankLine className="text-3xl" style={{ color: '#1b5AA7' }} />;
+    if (titleLower.includes("land") || titleLower.includes("property")) return <FaMapMarkerAlt className="text-3xl" style={{ color: '#1b5AA7' }} />;
+    if (titleLower.includes("ward")) return <FaRegBuilding className="text-3xl" style={{ color: '#1b5AA7' }} />;
+    if (titleLower.includes("municipality")) return <FaLandmark className="text-3xl" style={{ color: '#1b5AA7' }} />;
+    if (titleLower.includes("scholarship")) return <PiGraduationCap className="text-3xl" style={{ color: '#1b5AA7' }} />;
+    return <FaRegBuilding className="text-3xl" style={{ color: '#1b5AA7' }} />;
   };
 
   useEffect(() => {
@@ -113,7 +113,7 @@ export default function AllServices() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <FaSpinner className="animate-spin text-4xl text-blue-600" />
+        <FaSpinner className="animate-spin text-4xl" style={{ color: '#1b5AA7' }} />
       </div>
     );
   }
@@ -132,20 +132,23 @@ export default function AllServices() {
               key={service.id || idx}
               className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 text-center hover:shadow-md transition-shadow"
             >
-              <div className="mx-auto h-16 w-16 bg-blue-100 flex items-center justify-center rounded-full">
+              <div className="mx-auto h-16 w-16 flex items-center justify-center rounded-full" style={{ backgroundColor: '#e8f0fa' }}>
                 {service.icon}
               </div>
               <h2 className="mt-4 text-lg font-semibold">{service.title}</h2>
               <p className="text-gray-600 text-sm mt-2">{service.description || service.desc}</p>
-              {service.fee && (
+              {/* {service.fee && (
                 <p className="text-xs text-gray-500 mt-1">{t.fee}: Rs. {service.fee}</p>
               )}
               {service.estimated_days && (
                 <p className="text-xs text-gray-500">{t.estimatedDays}: {service.estimated_days}</p>
-              )}
+              )} */}
               <button
                 onClick={() => handleApply(service)}
-                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors cursor-pointer"
+                className="mt-4 px-4 py-2 text-white rounded-md transition-colors cursor-pointer"
+                style={{ backgroundColor: '#1b5AA7' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#154a8a'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1b5AA7'}
               >
                 {t.applyNow}
               </button>

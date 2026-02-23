@@ -1,83 +1,113 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { IoMegaphone } from "react-icons/io5";
+import { FaSpinner } from "react-icons/fa";
 import { useLanguage } from "../../context/LanguageContext";
+import { noticesAPI } from "../../services/api";
 
-// Notices data with both English and Nepali content
-const noticesData = [
+// Default notices data with both English and Nepali content
+const defaultNoticesData = [
   {
+    id: 1,
     titleEn: "National Scholarship Program 2082",
-    titleNp: "राष्ट्रिय छात्रवृत्ति कार्यक्रम २०८२",
+    titleNp: "????????? ??????????? ????????? ????",
     descEn: "Applications open for meritorious students from marginalized communities. Apply before Baisakh 15.",
-    descNp: "सीमान्तकृत समुदायका मेधावी विद्यार्थीहरूका लागि आवेदन खुला छ। बैशाख १५ अघि आवेदन दिनुहोस्।",
+    descNp: "?????????? ???????? ?????? ??????????????? ???? ????? ???? ?? ????? ?? ??? ????? ?????????",
     category: "scholarship",
   },
   {
+    id: 2,
     titleEn: "Farmer Subsidy for Khet Land",
-    titleNp: "खेत जमिनको लागि किसान अनुदान",
+    titleNp: "??? ?????? ???? ????? ??????",
     descEn: "Government subsidy of up to Rs 50,000 for small-scale farmers for seeds and fertilizers.",
-    descNp: "साना किसानहरूलाई बीउ र मलका लागि रु ५०,००० सम्मको सरकारी अनुदान।",
+    descNp: "???? ??????????? ??? ? ???? ???? ?? ??,??? ?????? ?????? ???????",
     category: "agriculture",
   },
   {
+    id: 3,
     titleEn: "New Online Passport Application System",
-    titleNp: "नयाँ अनलाइन राहदानी आवेदन प्रणाली",
+    titleNp: "???? ?????? ??????? ????? ???????",
     descEn: "Department of Passports has launched a new online system effective from Magh 1.",
-    descNp: "राहदानी विभागले माघ १ देखि लागू हुने नयाँ अनलाइन प्रणाली सुरु गरेको छ।",
+    descNp: "??????? ??????? ??? ? ???? ???? ???? ???? ?????? ??????? ???? ????? ??",
     category: "announcement",
   },
   {
+    id: 4,
     titleEn: "Youth Self-Employment Program",
-    titleNp: "युवा स्वरोजगार कार्यक्रम",
+    titleNp: "???? ????????? ?????????",
     descEn: "Interest-free loans up to Rs 5 lakhs for youth entrepreneurs under PM Employment Program.",
-    descNp: "प्रधानमन्त्री रोजगार कार्यक्रम अन्तर्गत युवा उद्यमीहरूलाई रु ५ लाखसम्म ब्याजमुक्त ऋण।",
+    descNp: "????????????? ?????? ????????? ???????? ???? ???????????? ?? ? ??????? ?????????? ???",
     category: "scheme",
   },
   {
-    titleEn: "Property Tax Deadline Extended",
-    titleNp: "सम्पत्ति कर म्याद थप",
-    descEn: "Municipal property tax deadline extended to Chaitra 30 without penalty.",
-    descNp: "नगरपालिका सम्पत्ति करको म्याद चैत्र ३० सम्म जरिवाना बिना थपिएको छ।",
-    category: "announcement",
-  },
-  {
+    id: 5,
     titleEn: "Free Health Camp in Rural Areas",
-    titleNp: "ग्रामीण क्षेत्रमा निःशुल्क स्वास्थ्य शिविर",
+    titleNp: "??????? ????????? ???????? ????????? ?????",
     descEn: "Free medical checkups and medicines will be provided in select rural municipalities from Falgun 10-15.",
-    descNp: "फागुन १०-१५ मा छनौट गरिएका ग्रामीण नगरपालिकाहरूमा निःशुल्क स्वास्थ्य परीक्षण र औषधि वितरण हुनेछ।",
+    descNp: "????? ??-?? ?? ???? ?????? ??????? ?????????????? ???????? ????????? ??????? ? ???? ????? ??????",
     category: "health",
   },
   {
+    id: 6,
     titleEn: "Digital Literacy Training for Women",
-    titleNp: "महिलाहरूको लागि डिजिटल साक्षरता तालिम",
+    titleNp: "?????????? ???? ?????? ???????? ?????",
     descEn: "Registration open for free digital skills training for women above 18 years. Limited seats available.",
-    descNp: "१८ वर्ष माथिका महिलाहरूको लागि निःशुल्क डिजिटल सीप तालिममा दर्ता खुला छ। सीमित सिटहरू उपलब्ध।",
+    descNp: "?? ???? ?????? ?????????? ???? ???????? ?????? ??? ??????? ????? ???? ?? ????? ?????? ???????",
     category: "training",
-  },
-  {
-    titleEn: "National Identity Card Distribution",
-    titleNp: "राष्ट्रिय परिचयपत्र वितरण",
-    descEn: "Distribution of National ID cards will begin in all wards from Jestha 1. Bring citizenship and old ID for verification.",
-    descNp: "जेठ १ देखि सबै वडाहरूमा राष्ट्रिय परिचयपत्र वितरण सुरु हुनेछ। प्रमाणीकरणको लागि नागरिकता र पुरानो परिचयपत्र ल्याउनुहोस्।",
-    category: "identity",
   },
 ];
 
 export default function GovernmentNotices() {
   const { t, language } = useLanguage();
-  
+  const [notices, setNotices] = useState(defaultNoticesData);
+  const [loading, setLoading] = useState(true);
+
   // Helper to get category label based on language
   const getCategoryLabel = (category) => {
     const labels = {
-      scholarship: t.scholarship,
-      agriculture: t.agriculture,
-      announcement: t.announcement,
-      scheme: t.scheme,
-      health: t.health,
-      training: t.training,
-      identity: t.identity,
+      scholarship: t.scholarship || "Scholarship",
+      agriculture: t.agriculture || "Agriculture",
+      announcement: t.announcement || "Announcement",
+      scheme: t.scheme || "Scheme",
+      health: t.health || "Health",
+      training: t.training || "Training",
+      identity: t.identity || "Identity",
     };
     return labels[category] || category;
   };
+
+  useEffect(() => {
+    const fetchNotices = async () => {
+      try {
+        const data = await noticesAPI.getAll();
+        if (data && data.length > 0) {
+          // Map API data to include both language versions if available
+          const mappedData = data.map((notice, index) => ({
+            id: notice.id || index + 1,
+            titleEn: notice.title,
+            titleNp: notice.title_np || notice.title,
+            descEn: notice.description,
+            descNp: notice.description_np || notice.description,
+            category: notice.category?.toLowerCase() || "announcement",
+          }));
+          setNotices(mappedData);
+        }
+      } catch (error) {
+        console.error("Failed to fetch notices:", error);
+        // Keep default notices on error
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchNotices();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <FaSpinner className="animate-spin text-4xl text-blue-600" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 Container py-10">
@@ -87,8 +117,8 @@ export default function GovernmentNotices() {
       </h1>
 
       <div className="mt-6 space-y-5">
-        {noticesData.map((notice, index) => (
-          <div key={index} className="bg-white border rounded-xl shadow-sm p-5 flex justify-between items-start">
+        {notices.map((notice) => (
+          <div key={notice.id} className="bg-white border rounded-xl shadow-sm p-5 flex justify-between items-start">
             <div>
               <p className="text-lg font-semibold">
                 {language === 'np' ? notice.titleNp : notice.titleEn}

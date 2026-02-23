@@ -27,7 +27,6 @@ export {
   AdminDashboard,
   AdminApplications,
   AdminServices,
-  Changes,
   ContactUs,
   TemplateEditor
 };
