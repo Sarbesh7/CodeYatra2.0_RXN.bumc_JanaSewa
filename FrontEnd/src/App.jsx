@@ -20,6 +20,7 @@ import {
 import Personaldetails from "./Components/Profile/Personal-Details/Personaldetails";
 import { AuthProvider } from "./context/AuthContext";
 import { LanguageProvider } from "./context/LanguageContext";
+import Map from "./Components/Map/Map";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
             <Route path="/form" element={<CitizenshipDetails />} />
             <Route path="/template-editor" element={<TemplateEditor />} />
             <Route path="/template" element={<TemplateEditor />} />
+            <Route path="/map" element={<Map />} />
             <Route path="profile">
               <Route index element={<>Profile</>} />
               <Route path="PersonalDetails" element={<Personaldetails />} />

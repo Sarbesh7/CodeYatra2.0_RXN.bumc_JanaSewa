@@ -72,10 +72,10 @@ function Home() {
                 <FaWpforms className="text-blue-600 text-3xl" />
               </div>
               <h3 className="font-semibold text-lg mb-2 text-gray-800">
-                {t.applyOnline}
+               {t.templates}
               </h3>
               <p className="text-gray-500 text-sm text-center">
-                {t.applyOnlineDesc}
+                {t.templatesDesc}
               </p>
             </div>
 
