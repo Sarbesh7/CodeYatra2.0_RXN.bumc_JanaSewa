@@ -1,43 +1,58 @@
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { NavBar, ComplaintForm, TrackApplication, Footer, Login, CitizenshipDetails, AllServices, Home, GovernmentNotices } from "./Components/index"
-import SideBar from "./Components/Dashboard/Sidebar/SideBar";
-import PostNotice from "./Components/Dashboard/Pages/PostNotice/PostNotice";
-import Dashboard from "./Components/Dashboard/Pages/Dashboard/Dashboard";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+  NavBar,
+  ComplaintForm,
+  TrackApplication,
+  Footer,
+  Login,
+  CitizenshipDetails,
+  AllServices,
+  Home,
+  GovernmentNotices,
+  ApplyForm,
+  AdminDashboard,
+  AdminApplications,
+  AdminServices,
+} from "./Components/index";
 
-function AppContent() {
-  const location = useLocation();
-  const isAdminRoute = location.pathname.startsWith("/admin");
-
-  return (
-    <>
-      {!isAdminRoute && <NavBar />}
-      <Routes>
-        <Route path="/" element={<Home />}></Route>
-        <Route path="/services" element={<AllServices />}></Route>
-        <Route path="/login" element={<Login />}></Route>
-        <Route path="/track-Application" element={<TrackApplication />}></Route>
-        <Route path="/complaints" element={<ComplaintForm />}></Route>
-        <Route path="/government-notice" element={<GovernmentNotices />}></Route>
-        <Route path="/profile" element={<>profile</>}></Route>
-        <Route path="/form" element={<CitizenshipDetails />}></Route>
-
-        <Route path="/admin" element={<SideBar />}>
-          <Route index element={<Dashboard />} />
-          <Route path="applications" element={<div className="p-10 text-2xl font-semibold text-gray-700">Applications</div>} />
-          <Route path="approve" element={<div className="p-10 text-2xl font-semibold text-gray-700">Approve / Reject</div>} />
-          <Route path="post-notice" element={<PostNotice />} />
-        </Route>
-      </Routes>
-      {!isAdminRoute && <Footer />}
-    </>
-  );
-}
+import Personaldetails from "./Components/Profile/Personal-Details/Personaldetails";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   return (
-    <BrowserRouter>
-      <AppContent />
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <NavBar />
+        <Routes>
+
+          <Route path="/" element={<Home />} />
+          <Route path="/services" element={<AllServices />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/track-Application" element={<TrackApplication />} />
+          <Route path="/complaints" element={<ComplaintForm />} />
+          <Route path="/government-notice" element={<GovernmentNotices />} />
+          
+          <Route path="/apply/:serviceId" element={<ApplyForm />} />
+          <Route path="/form" element={<CitizenshipDetails />} />
+
+          <Route path="profile">
+            <Route index element={<>Profile</>} />
+            <Route path="PersonalDetails" element={<Personaldetails />} />
+          </Route>
+
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/applications" element={<AdminApplications />} />
+          <Route path="/admin/services" element={<AdminServices />} />
+
+          <Route path="Books">
+            <Route index element={<>Books</>} />
+            <Route path="Buy" element={<>Buy Books</>} />
+            <Route path="Sell" element={<>Sell Books</>} />
+          </Route>
+        </Routes>
+        <Footer />
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
