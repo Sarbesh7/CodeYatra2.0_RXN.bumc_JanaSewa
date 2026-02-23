@@ -16,7 +16,6 @@ import shutil
 import random
 import string
 
-# Create uploads directory
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(f"{UPLOAD_DIR}/documents", exist_ok=True)
@@ -29,13 +28,10 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Create all database tables
 models.Base.metadata.create_all(bind=engine)
 
-# Mount static files for uploads
 app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
-# CORS configuration
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000", "http://localhost:5173", "http://127.0.0.1:5173", 
@@ -83,14 +79,10 @@ def generate_serial():
     return f"JS-{year}-{random_part}"
 
 
-# ==================== ROOT ====================
-
 @app.get("/", tags=["Root"])
 def root():
     return {"message": "Welcome to JanaSewa - Smart Citizen Service Portal"}
 
-
-# ==================== AUTHENTICATION ====================
 
 @app.post("/api/auth/register", response_model=schemas.UserResponse, tags=["Authentication"])
 def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
@@ -141,8 +133,6 @@ def get_me(current_user: models.User = Depends(get_current_user)):
     """Get current user profile"""
     return current_user
 
-
-# ==================== SERVICES ====================
 
 @app.get("/api/services", response_model=List[schemas.ServiceResponse], tags=["Services"])
 def get_services(
@@ -215,8 +205,6 @@ def delete_service(
     return {"message": "Service deleted successfully"}
 
 
-# ==================== APPLICATIONS ====================
-
 @app.post("/api/applications", response_model=schemas.ApplicationResponse, tags=["Applications"])
 def create_application(
     application: schemas.ApplicationCreate,
@@ -224,12 +212,10 @@ def create_application(
     current_user: models.User = Depends(get_current_user)
 ):
     """Submit new application"""
-    # Verify service exists
     service = db.query(models.Service).filter(models.Service.id == application.service_id).first()
     if not service:
         raise HTTPException(status_code=404, detail="Service not found")
     
-    # Generate unique serial number
     serial = generate_serial()
     while db.query(models.Application).filter(models.Application.serial_number == serial).first():
         serial = generate_serial()
@@ -287,14 +273,12 @@ async def upload_application_document(
     if not app:
         raise HTTPException(status_code=404, detail="Application not found")
     
-    # Save file
     filename = f"{application_id}_{datetime.now().timestamp()}_{file.filename}"
     filepath = f"{UPLOAD_DIR}/documents/{filename}"
     
     with open(filepath, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
     
-    # Update application documents list
     docs = app.documents or []
     docs.append(f"/uploads/documents/{filename}")
     app.documents = docs
@@ -302,8 +286,6 @@ async def upload_application_document(
     
     return {"message": "Document uploaded", "path": f"/uploads/documents/{filename}"}
 
-
-# ==================== APPLICATION TRACKING ====================
 
 @app.get("/api/track/{serial_number}", response_model=schemas.TrackingResponse, tags=["Tracking"])
 def track_application(serial_number: str, db: Session = Depends(get_db)):
@@ -328,8 +310,6 @@ def track_application(serial_number: str, db: Session = Depends(get_db)):
         "official_document_path": app.official_document_path
     }
 
-
-# ==================== ADMIN - APPLICATIONS ====================
 
 @app.get("/api/admin/applications", response_model=List[schemas.ApplicationResponse], tags=["Admin - Applications"])
 def get_all_applications(
@@ -397,8 +377,6 @@ async def upload_official_document(
     return {"message": "Official document uploaded", "path": app.official_document_path}
 
 
-# ==================== COMPLAINTS ====================
-
 @app.post("/api/complaints", response_model=schemas.ComplaintResponse, tags=["Complaints"])
 def create_complaint(
     complaint: schemas.ComplaintCreate,
@@ -454,8 +432,6 @@ async def upload_complaint_attachment(
     return {"message": "Attachment uploaded", "path": complaint.attachment_path}
 
 
-# ==================== ADMIN - COMPLAINTS ====================
-
 @app.get("/api/admin/complaints", response_model=List[schemas.ComplaintResponse], tags=["Admin - Complaints"])
 def get_all_complaints(
     status: Optional[str] = None,
@@ -492,8 +468,6 @@ def update_complaint(
     return complaint
 
 
-# ==================== NOTICES ====================
-
 @app.get("/api/notices", response_model=List[schemas.NoticeResponse], tags=["Notices"])
 def get_notices(
     category: Optional[str] = None,
@@ -514,8 +488,6 @@ def get_notice(notice_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Notice not found")
     return notice
 
-
-# ==================== ADMIN - NOTICES ====================
 
 @app.post("/api/admin/notices", response_model=schemas.NoticeResponse, tags=["Admin - Notices"])
 def create_notice(
@@ -567,8 +539,6 @@ def delete_notice(
     return {"message": "Notice deleted successfully"}
 
 
-# ==================== ADMIN DASHBOARD STATS ====================
-
 @app.get("/api/admin/stats", response_model=schemas.AdminStats, tags=["Admin - Dashboard"])
 def get_admin_stats(
     db: Session = Depends(get_db),
@@ -610,17 +580,13 @@ def get_all_users(
     return users
 
 
-# ==================== SEED DATA ====================
-
 @app.post("/api/seed", tags=["Utility"])
 def seed_data(db: Session = Depends(get_db)):
     """Seed initial data (services and admin user)"""
     
-    # Check if already seeded
     if db.query(models.Service).count() > 0:
         return {"message": "Data already seeded"}
     
-    # Create admin user
     admin = models.User(
         full_name="Admin User",
         email="admin@janasewa.gov.np",
@@ -629,7 +595,6 @@ def seed_data(db: Session = Depends(get_db)):
     )
     db.add(admin)
     
-    # Create services
     services = [
         {
             "title": "Citizenship Certificate",
@@ -700,7 +665,6 @@ def seed_data(db: Session = Depends(get_db)):
     for s in services:
         db.add(models.Service(**s))
     
-    # Create sample notices
     notices = [
         {
             "title": "National Scholarship Program 2082",

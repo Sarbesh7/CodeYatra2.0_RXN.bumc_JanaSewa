@@ -1,16 +1,12 @@
-// API Configuration and Service Layer
 const API_BASE_URL = 'http://localhost:5000/api';
 
-// Get token from localStorage
 const getToken = () => localStorage.getItem('access_token');
 
-// Headers with authentication
 const authHeaders = () => ({
   'Content-Type': 'application/json',
   'Authorization': `Bearer ${getToken()}`
 });
 
-// Generic fetch wrapper with error handling
 const fetchAPI = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
   
@@ -37,8 +33,6 @@ const fetchAPI = async (endpoint, options = {}) => {
   }
 };
 
-// ==================== AUTH API ====================
-
 export const authAPI = {
   register: (data) => fetchAPI('/auth/register', {
     method: 'POST',
@@ -55,8 +49,6 @@ export const authAPI = {
   })
 };
 
-// ==================== SERVICES API ====================
-
 export const servicesAPI = {
   getAll: (officeType = null) => {
     const params = officeType ? `?office_type=${officeType}` : '';
@@ -65,7 +57,6 @@ export const servicesAPI = {
 
   getById: (id) => fetchAPI(`/services/${id}`),
 
-  // Admin
   create: (data) => fetchAPI('/admin/services', {
     method: 'POST',
     headers: authHeaders(),
@@ -84,8 +75,6 @@ export const servicesAPI = {
   })
 };
 
-// ==================== APPLICATIONS API ====================
-
 export const applicationsAPI = {
   create: (data) => fetchAPI('/applications', {
     method: 'POST',
@@ -103,7 +92,6 @@ export const applicationsAPI = {
 
   track: (serialNumber) => fetchAPI(`/track/${serialNumber}`),
 
-  // File upload
   uploadDocument: async (applicationId, file) => {
     const formData = new FormData();
     formData.append('file', file);
@@ -121,7 +109,6 @@ export const applicationsAPI = {
     return response.json();
   },
 
-  // Admin
   getAll: (status = null, serviceId = null) => {
     const params = new URLSearchParams();
     if (status) params.append('status', status);
@@ -157,7 +144,6 @@ export const applicationsAPI = {
   }
 };
 
-// ==================== COMPLAINTS API ====================
 
 export const complaintsAPI = {
   create: (data) => fetchAPI('/complaints', {
@@ -187,7 +173,6 @@ export const complaintsAPI = {
     return response.json();
   },
 
-  // Admin
   getAll: (status = null) => {
     const params = status ? `?status=${status}` : '';
     return fetchAPI(`/admin/complaints${params}`, {
@@ -202,8 +187,6 @@ export const complaintsAPI = {
   })
 };
 
-// ==================== NOTICES API ====================
-
 export const noticesAPI = {
   getAll: (category = null) => {
     const params = category ? `?category=${category}` : '';
@@ -212,7 +195,6 @@ export const noticesAPI = {
 
   getById: (id) => fetchAPI(`/notices/${id}`),
 
-  // Admin
   create: (data) => fetchAPI('/admin/notices', {
     method: 'POST',
     headers: authHeaders(),
@@ -231,14 +213,11 @@ export const noticesAPI = {
   })
 };
 
-// ==================== ADMIN STATS API ====================
-
 export const adminAPI = {
   getStats: () => fetchAPI('/admin/stats', {
     headers: authHeaders()
   }),
 
-  // Applications
   getApplications: (status = null, serviceId = null) => {
     const params = new URLSearchParams();
     if (status) params.append('status', status);
@@ -252,7 +231,6 @@ export const adminAPI = {
 
   updateApplicationStatus: async (id, status, file = null) => {
     if (file) {
-      // Upload official document with status update
       const formData = new FormData();
       formData.append('file', file);
       
@@ -267,7 +245,6 @@ export const adminAPI = {
         throw new Error(error.detail || 'Upload failed');
       }
       
-      // Also update status
       await fetchAPI(`/admin/applications/${id}/status`, {
         method: 'PUT',
         headers: authHeaders(),
@@ -284,7 +261,6 @@ export const adminAPI = {
     });
   },
 
-  // Services
   createService: (data) => fetchAPI('/admin/services', {
     method: 'POST',
     headers: authHeaders(),
@@ -302,7 +278,6 @@ export const adminAPI = {
     headers: authHeaders()
   }),
 
-  // Complaints
   getComplaints: (status = null) => {
     const params = status ? `?status=${status}` : '';
     return fetchAPI(`/admin/complaints${params}`, {
@@ -316,13 +291,10 @@ export const adminAPI = {
     body: JSON.stringify({ status, admin_response: adminResponse })
   }),
 
-  // Users
   getUsers: () => fetchAPI('/admin/users', {
     headers: authHeaders()
   })
 };
-
-// ==================== SEED DATA ====================
 
 export const seedData = () => fetchAPI('/seed', { method: 'POST' });
 

@@ -6,52 +6,54 @@ import { FaIdCard, FaLandmark, FaMapMarkerAlt, FaRegBuilding, FaSpinner } from "
 import { PiGraduationCap } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 import { servicesAPI } from "../../services/api";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function AllServices() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Default services with icons
-  const defaultServices = [
+  // Default services with icons (uses translations)
+  const getDefaultServices = () => [
     {
-      title: "Citizenship",
-      description: "Apply for new citizenship certificate or renewal.",
+      title: t.citizenship,
+      description: t.citizenshipDesc,
       icon: <FaIdCard className="text-blue-600 text-3xl" />,
     },
     {
-      title: "License (Yatayat)",
-      description: "Apply for driving license or renewal.",
+      title: t.license,
+      description: t.licenseDesc,
       icon: <LuCar className="text-blue-600 text-3xl" />,
     },
     {
-      title: "Passport",
-      description: "Apply for a new passport or renew your existing one.",
+      title: t.passport,
+      description: t.passportDesc,
       icon: <GoGlobe className="text-blue-600 text-3xl" />,
     },
     {
-      title: "Tax & Revenue",
-      description: "File taxes, pay revenue, and get tax clearance.",
+      title: t.taxRevenue,
+      description: t.taxRevenueDesc,
       icon: <RiBankLine className="text-blue-600 text-3xl" />,
     },
     {
-      title: "Property & Land",
-      description: "Land registration, ownership transfer, and records.",
+      title: t.propertyLand,
+      description: t.propertyLandDesc,
       icon: <FaMapMarkerAlt className="text-blue-600 text-3xl" />,
     },
     {
-      title: "Ward Services",
-      description: "Local ward-level services and recommendations.",
+      title: t.wardServices,
+      description: t.wardServicesDesc,
       icon: <FaRegBuilding className="text-blue-600 text-3xl" />,
     },
     {
-      title: "Municipality Services",
-      description: "Municipal-level services and permits.",
+      title: t.municipalityServices,
+      description: t.municipalityServicesDesc,
       icon: <FaLandmark className="text-blue-600 text-3xl" />,
     },
     {
-      title: "Scholarships Programs",
-      description: "Government scholarships and support programs.",
+      title: t.scholarships,
+      description: t.scholarshipsDesc,
       icon: <PiGraduationCap className="text-blue-600 text-3xl" />,
     },
   ];
@@ -81,12 +83,12 @@ export default function AllServices() {
         setServices(data.map(s => ({ ...s, icon: getIcon(s.title) })));
       } else {
         // Use default services if API returns empty
-        setServices(defaultServices);
+        setServices(getDefaultServices());
       }
     } catch (err) {
       // Use default services if API fails
       console.error("Failed to fetch services:", err);
-      setServices(defaultServices);
+      setServices(getDefaultServices());
     } finally {
       setLoading(false);
     }
@@ -95,7 +97,7 @@ export default function AllServices() {
   const handleApply = (service) => {
     const token = localStorage.getItem("access_token");
     if (!token) {
-      alert("Please login to apply for services");
+      alert(t.loginToApply);
       navigate("/login");
       return;
     }
@@ -119,9 +121,9 @@ export default function AllServices() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 py-10">
-        <h1 className="text-3xl font-semibold">All Services</h1>
+        <h1 className="text-3xl font-semibold">{t.allServices}</h1>
         <p className="text-gray-600 mt-2">
-          Browse available government services and find what you need.
+          {t.allServicesSubtitle}
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
@@ -136,16 +138,16 @@ export default function AllServices() {
               <h2 className="mt-4 text-lg font-semibold">{service.title}</h2>
               <p className="text-gray-600 text-sm mt-2">{service.description || service.desc}</p>
               {service.fee && (
-                <p className="text-xs text-gray-500 mt-1">Fee: Rs. {service.fee}</p>
+                <p className="text-xs text-gray-500 mt-1">{t.fee}: Rs. {service.fee}</p>
               )}
               {service.estimated_days && (
-                <p className="text-xs text-gray-500">Est. {service.estimated_days} days</p>
+                <p className="text-xs text-gray-500">{t.estimatedDays}: {service.estimated_days}</p>
               )}
               <button
                 onClick={() => handleApply(service)}
                 className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors cursor-pointer"
               >
-                Apply Now
+                {t.applyNow}
               </button>
             </div>
           ))}

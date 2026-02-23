@@ -1,10 +1,3 @@
-# =============================================================================
-# Users Router - User Management Endpoints
-# =============================================================================
-# Handles user CRUD operations with role-based access control.
-# Admin-only endpoints for user management.
-# =============================================================================
-
 from typing import List, Optional
 from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, status, Query
@@ -21,7 +14,6 @@ from app.dependencies import (
     require_admin
 )
 
-# Create router with prefix and tags
 router = APIRouter(
     prefix="/users",
     tags=["Users"],
@@ -32,10 +24,6 @@ router = APIRouter(
     }
 )
 
-
-# =============================================================================
-# User Profile Endpoints (Self-Service)
-# =============================================================================
 
 @router.get(
     "/profile",
@@ -61,11 +49,7 @@ async def update_profile(
 ):
     """
     Update current user's profile.
-    
-    Users can update their name and email.
-    They cannot change their own active status or roles.
     """
-    # Check if new email is already taken
     if update_data.email and update_data.email != current_user.email:
         existing = db.query(models.User).filter(
             models.User.email == update_data.email
@@ -76,7 +60,7 @@ async def update_profile(
                 detail="Email already registered"
             )
         current_user.email = update_data.email
-        current_user.is_verified = False  # Require re-verification
+        current_user.is_verified = False
     
     if update_data.name:
         current_user.name = update_data.name
@@ -87,10 +71,6 @@ async def update_profile(
     
     return current_user
 
-
-# =============================================================================
-# Admin User Management Endpoints
-# =============================================================================
 
 @router.get(
     "/",
@@ -109,17 +89,9 @@ async def list_users(
 ):
     """
     List all users with pagination and filtering.
-    
-    Query Parameters:
-    - skip: Pagination offset
-    - limit: Maximum records to return
-    - search: Search in name or email
-    - is_active: Filter by active status
-    - role: Filter by role name
     """
     query = db.query(models.User)
     
-    # Apply search filter
     if search:
         query = query.filter(
             or_(
@@ -128,15 +100,12 @@ async def list_users(
             )
         )
     
-    # Apply active status filter
     if is_active is not None:
         query = query.filter(models.User.is_active == is_active)
     
-    # Apply role filter
     if role:
         query = query.join(models.User.roles).filter(models.Role.name == role)
     
-    # Apply pagination
     users = query.offset(skip).limit(limit).all()
     
     return users
@@ -179,10 +148,7 @@ async def create_user(
 ):
     """
     Create a new user (admin only).
-    
-    Allows admin to create users with specific roles.
     """
-    # Check if email exists
     existing = db.query(models.User).filter(
         models.User.email == user_data.email
     ).first()
@@ -193,23 +159,20 @@ async def create_user(
             detail="Email already registered"
         )
     
-    # Create user
     new_user = models.User(
         name=user_data.name,
         email=user_data.email,
         password=PasswordManager.hash_password(user_data.password),
         is_active=True,
-        is_verified=True  # Admin-created users are pre-verified
+        is_verified=True
     )
     
-    # Assign roles
     if user_data.role_ids:
         roles = db.query(models.Role).filter(
             models.Role.id.in_(user_data.role_ids)
         ).all()
         new_user.roles = roles
     else:
-        # Default to 'user' role
         default_role = db.query(models.Role).filter(
             models.Role.name == models.RoleNames.USER
         ).first()
@@ -244,7 +207,6 @@ async def update_user(
             detail="User not found"
         )
     
-    # Update fields if provided
     if update_data.name is not None:
         user.name = update_data.name
     
@@ -285,7 +247,6 @@ async def delete_user(
     db: Session = Depends(get_db)
 ):
     """Delete a user (admin only)."""
-    # Prevent self-deletion
     if user_id == current_user.id:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -300,7 +261,6 @@ async def delete_user(
             detail="User not found"
         )
     
-    # Prevent deletion of superadmin by non-superadmin
     if user.is_superadmin and not current_user.is_superadmin:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -312,10 +272,6 @@ async def delete_user(
     
     return {"message": f"User {user.email} deleted successfully", "success": True}
 
-
-# =============================================================================
-# Role Management Endpoints
-# =============================================================================
 
 @router.post(
     "/{user_id}/roles",
@@ -339,7 +295,6 @@ async def assign_roles(
             detail="User not found"
         )
     
-    # Only superadmin can assign superadmin role
     roles_to_assign = db.query(models.Role).filter(
         models.Role.id.in_(role_data.role_ids)
     ).all()
@@ -351,13 +306,11 @@ async def assign_roles(
                 detail="Only superadmin can assign superadmin role"
             )
     
-    # Add roles (avoiding duplicates)
     current_role_ids = {r.id for r in user.roles}
     for role in roles_to_assign:
         if role.id not in current_role_ids:
             user.roles.append(role)
 
-    # Sync is_admin column: True if any admin/superadmin role present
     all_role_names = {r.name for r in user.roles}
     user.is_admin = bool(all_role_names & {"admin", "superadmin"})
 
@@ -389,7 +342,6 @@ async def remove_roles(
             detail="User not found"
         )
     
-    # Prevent removing own admin/superadmin role
     if user_id == current_user.id:
         admin_roles = db.query(models.Role).filter(
             models.Role.id.in_(role_data.role_ids),
@@ -401,7 +353,6 @@ async def remove_roles(
                 detail="Cannot remove your own admin role"
             )
     
-    # Only superadmin can remove superadmin role
     roles_to_remove = db.query(models.Role).filter(
         models.Role.id.in_(role_data.role_ids)
     ).all()
@@ -413,11 +364,9 @@ async def remove_roles(
                 detail="Only superadmin can remove superadmin role"
             )
     
-    # Remove roles
     role_ids_to_remove = set(role_data.role_ids)
     user.roles = [r for r in user.roles if r.id not in role_ids_to_remove]
 
-    # Sync is_admin column after removal
     remaining_role_names = {r.name for r in user.roles}
     user.is_admin = bool(remaining_role_names & {"admin", "superadmin"})
 
@@ -426,10 +375,6 @@ async def remove_roles(
     
     return user
 
-
-# =============================================================================
-# Role Listing
-# =============================================================================
 
 @router.get(
     "/roles/all",

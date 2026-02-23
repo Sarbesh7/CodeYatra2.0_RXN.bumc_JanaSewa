@@ -7,24 +7,26 @@ import { IoShieldOutline } from "react-icons/io5";
 import { LuCar } from "react-icons/lu";
 import { GoGlobe } from "react-icons/go";
 import { RiBankLine } from "react-icons/ri";
+import { useLanguage } from "../../context/LanguageContext";
 
 function Home() {
     const Navigate = useNavigate();
+    const { t } = useLanguage();
+    
   return (
     <>
-      {/* Hero */}
       <div className="bg-[#1b5aa7] text-white py-10 text-center">
         <div className="max-w-[1100px] mx-auto px-4 flex flex-col items-center gap-4">
           <h1 className="text-[2.25rem] max-w-[800px] md:text-[3.25rem] lg:text-[4rem]  font-bold m-0">
-            All Government Services in One Place
+            {t.heroTitle}
           </h1>
           <p className="text-white/90 max-w-[720px] mt-2">
-            Know where to go, what documents to bring, and apply online.
+            {t.heroSubtitle}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 mt-6 items-center justify-center">
             <button onClick={()=>Navigate('/services')} className="cursor-pointer inline-flex items-center gap-2 py-2.5 px-5 rounded-lg font-semibold text-[0.95rem] bg-white text-[#1b5aa7] shadow-md hover:-translate-y-0.5 transition-transform">
-              <span>Explore Services</span>
+              <span>{t.exploreServices}</span>
               <FaArrowRight className="inline-flex items-center" />
             </button>
 
@@ -33,26 +35,24 @@ function Home() {
               className="inline-flex items-center gap-2 py-2.5 px-5 rounded-lg font-semibold text-[0.95rem] bg-white/10 text-white border border-white/15 hover:bg-white/20 transition-colors"
             >
               <IoMdSearch className="inline-flex items-center" />
-              <span>Track Application</span>
+              <span>{t.trackApplication}</span>
             </NavLink>
           </div>
         </div>
       </div>
 
-      {/* Content sada*/}
       <div className="bg-gray-50 py-12">
         <div className="Container">
-          {/* Features Section */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             <div className="bg-white rounded-xl border border-gray-200 flex flex-col items-center p-8">
               <div className="bg-blue-100 rounded-full p-4 mb-4">
                 <IoMdSearch className="text-blue-600 text-3xl" />
               </div>
               <h3 className="font-semibold text-lg mb-2 text-gray-800">
-                Find Services
+                {t.findServices}
               </h3>
               <p className="text-gray-500 text-sm text-center">
-                Search and browse all government services easily.
+                {t.findServicesDesc}
               </p>
             </div>
             <div className="bg-white rounded-xl border border-gray-200 flex flex-col items-center p-8">
@@ -60,10 +60,10 @@ function Home() {
                 <FaWpforms className="text-blue-600 text-3xl" />
               </div>
               <h3 className="font-semibold text-lg mb-2 text-gray-800">
-                Apply Online
+                {t.applyOnline}
               </h3>
               <p className="text-gray-500 text-sm text-center">
-                Submit your applications from anywhere, anytime.
+                {t.applyOnlineDesc}
               </p>
             </div>
             <div className="bg-white rounded-xl border border-gray-200 flex flex-col items-center p-8">
@@ -71,18 +71,17 @@ function Home() {
                 <IoShieldOutline className="text-blue-600 text-3xl" />
               </div>
               <h3 className="font-semibold text-lg mb-2 text-gray-800">
-                Track Status
+                {t.trackStatus}
               </h3>
               <p className="text-gray-500 text-sm text-center">
-                Get real-time updates on your application status.
+                {t.trackStatusDesc}
               </p>
             </div>
           </div>
 
-          {/* Popular Services Section */}
           <div>
             <h3 className="text-2xl font-bold text-gray-800 mb-8 text-center">
-              Popular Services
+              {t.popularServices}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="bg-white rounded-xl border border-gray-200 flex flex-col items-center p-8">
@@ -90,13 +89,13 @@ function Home() {
                   <FaWpforms className="text-blue-600 text-3xl" />
                 </div>
                 <h3 className="font-semibold text-lg mb-2 text-gray-800">
-                  Citizenship
+                  {t.citizenship}
                 </h3>
                 <p className="text-gray-500 text-sm text-center">
-                  Apply for new citizenship certificate or renewal.
+                  {t.citizenshipDesc}
                 </p>
                 <button className="mt-4 px-4 py-2 rounded-md bg-white text-gray-700 font-medium hover:bg-gray-50 border border-gray-200">
-                  View Details
+                  {t.viewDetails}
                 </button>
               </div>
               <div className="bg-white rounded-xl border border-gray-200 flex flex-col items-center p-8">
@@ -104,13 +103,13 @@ function Home() {
                   <LuCar className="text-blue-600 text-3xl" />
                 </div>
                 <h3 className="font-semibold text-lg mb-2 text-gray-800">
-                  License (Yatayat)
+                  {t.license}
                 </h3>
                 <p className="text-gray-500 text-sm text-center">
-                  Apply for driving license or renewal.
+                  {t.licenseDesc}
                 </p>
                 <button className="mt-4 px-4 py-2 rounded-md bg-white text-gray-700 font-medium hover:bg-gray-50 border border-gray-200">
-                  View Details
+                  {t.viewDetails}
                 </button>
               </div>
               <div className="bg-white rounded-xl border border-gray-200 flex flex-col items-center p-8">
@@ -118,13 +117,13 @@ function Home() {
                   <GoGlobe className="text-blue-600 text-3xl" />
                 </div>
                 <h3 className="font-semibold text-lg mb-2 text-gray-800">
-                  Passport
+                  {t.passport}
                 </h3>
                 <p className="text-gray-500 text-sm text-center">
-                  Apply for a new passport or renew your existing one.
+                  {t.passportDesc}
                 </p>
                 <button className="mt-4 px-4 py-2 rounded-md bg-white text-gray-700 font-medium hover:bg-gray-50 border border-gray-200">
-                  View Details
+                  {t.viewDetails}
                 </button>
               </div>
               <div className="bg-white rounded-xl border border-gray-200 flex flex-col items-center p-8">
@@ -132,19 +131,19 @@ function Home() {
                   <RiBankLine className="text-blue-600 text-3xl" />
                 </div>
                 <h3 className="font-semibold text-lg mb-2 text-gray-800">
-                  Tax & Revenue
+                  {t.taxRevenue}
                 </h3>
                 <p className="text-gray-500 text-sm text-center">
-                  File taxes, pay revenue, and get tax clearance.
+                  {t.taxRevenueDesc}
                 </p>
                 <button className="mt-4 px-4 py-2 rounded-md bg-white text-gray-700 font-medium hover:bg-gray-50 border border-gray-200">
-                  View Details
+                  {t.viewDetails}
                 </button>
               </div>
             </div>
             <div className="flex justify-center mt-8">
               <button onClick={() => Navigate('/services')} className="px-6 py-2 rounded-md bg-white text-gray-700 font-medium hover:bg-gray-50 inline-flex items-center gap-2 border border-gray-200">
-                View All Services{" "}
+                {t.viewAllServices}{" "}
                 <FaArrowRight className="text-gray-500 text-lg ml-2" />
               </button>
             </div>

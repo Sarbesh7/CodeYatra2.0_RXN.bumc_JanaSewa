@@ -1,10 +1,3 @@
-# =============================================================================
-# Authentication Router
-# =============================================================================
-# Handles user registration, login, token refresh, and password management.
-# All authentication-related endpoints are grouped here.
-# =============================================================================
-
 from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
@@ -21,7 +14,6 @@ from app.dependencies import get_current_user
 from app.config import settings
 from app.models import RoleNames
 
-# Create router with prefix and tags for Swagger UI organization
 router = APIRouter(
     prefix="/auth",
     tags=["Authentication"],
@@ -31,10 +23,6 @@ router = APIRouter(
     }
 )
 
-
-# =============================================================================
-# User Registration
-# =============================================================================
 
 @router.post(
     "/register",
@@ -59,14 +47,7 @@ async def register(
 ):
     """
     Create a new user account.
-    
-    Steps:
-    1. Check if email already exists
-    2. Hash the password
-    3. Create user with default 'user' role
-    4. Return user data (without password)
     """
-    # Check if email already registered
     existing_user = db.query(models.User).filter(
         models.User.email == user_data.email
     ).first()
@@ -77,19 +58,16 @@ async def register(
             detail="Email already registered"
         )
     
-    # Hash password before storing
     hashed_password = PasswordManager.hash_password(user_data.password)
     
-    # Create new user
     new_user = models.User(
         name=user_data.name,
         email=user_data.email,
         password=hashed_password,
         is_active=True,
-        is_verified=False  # Email verification can be implemented later
+        is_verified=False
     )
     
-    # Assign default 'user' role
     default_role = db.query(models.Role).filter(
         models.Role.name == RoleNames.USER
     ).first()
@@ -103,10 +81,6 @@ async def register(
     
     return new_user
 
-
-# =============================================================================
-# User Login
-# =============================================================================
 
 @router.post(
     "/login",
@@ -129,16 +103,11 @@ async def login(
 ):
     """
     Authenticate user and return JWT tokens.
-    
-    OAuth2PasswordRequestForm is used for Swagger UI compatibility.
-    It expects 'username' and 'password' fields (we use email as username).
     """
-    # Find user by email (form_data.username = email)
     user = db.query(models.User).filter(
         models.User.email == form_data.username
     ).first()
     
-    # Check if user exists
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -146,14 +115,12 @@ async def login(
             headers={"WWW-Authenticate": "Bearer"},
         )
     
-    # Check if account is active
     if not user.is_active:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Account is inactive. Please contact support."
         )
     
-    # Verify password
     if not PasswordManager.verify_password(form_data.password, user.password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -161,12 +128,9 @@ async def login(
             headers={"WWW-Authenticate": "Bearer"},
         )
     
-    # Update last login timestamp
     user.last_login = datetime.now(timezone.utc)
     db.commit()
     
-    # Determine primary role and redirect path
-    # Checks both is_admin column (set directly in DB) and role assignments
     role_names = [r.name for r in user.roles]
     if user.is_admin or "superadmin" in role_names or "admin" in role_names:
         primary_role = "admin"
@@ -175,7 +139,6 @@ async def login(
         primary_role = "user"
         redirect_to = "/dashboard"
 
-    # Generate tokens
     access_token = create_access_token(data={"sub": str(user.id)})
     refresh_token = create_refresh_token(data={"sub": str(user.id)})
     
@@ -229,8 +192,6 @@ async def login_json(
     user.last_login = datetime.now(timezone.utc)
     db.commit()
 
-    # Determine primary role and redirect path
-    # Checks both is_admin column (set directly in DB) and role assignments
     role_names = [r.name for r in user.roles]
     if user.is_admin or "superadmin" in role_names or "admin" in role_names:
         primary_role = "admin"
@@ -252,10 +213,6 @@ async def login_json(
     }
 
 
-# =============================================================================
-# Token Refresh
-# =============================================================================
-
 @router.post(
     "/refresh",
     response_model=schemas.Token,
@@ -274,7 +231,6 @@ async def refresh_token(
     """
     Exchange refresh token for new access token.
     """
-    # Decode and validate refresh token
     payload = TokenManager.decode_token(token_data.refresh_token, token_type="refresh")
     user_id = payload.get("sub")
     
@@ -284,7 +240,6 @@ async def refresh_token(
             detail="Invalid refresh token"
         )
     
-    # Verify user still exists and is active
     user = db.query(models.User).filter(models.User.id == int(user_id)).first()
     
     if not user or not user.is_active:
@@ -293,7 +248,6 @@ async def refresh_token(
             detail="User not found or inactive"
         )
     
-    # Generate new access token
     new_access_token = create_access_token(data={"sub": str(user.id)})
     
     role_names = [r.name for r in user.roles]
@@ -309,10 +263,6 @@ async def refresh_token(
     }
 
 
-# =============================================================================
-# Password Management
-# =============================================================================
-
 @router.post(
     "/change-password",
     response_model=schemas.MessageResponse,
@@ -327,7 +277,6 @@ async def change_password(
     """
     Change password for authenticated user.
     """
-    # Verify current password
     if not PasswordManager.verify_password(
         password_data.current_password, 
         current_user.password
@@ -337,7 +286,6 @@ async def change_password(
             detail="Current password is incorrect"
         )
     
-    # Check new password is different from current
     if PasswordManager.verify_password(
         password_data.new_password, 
         current_user.password
@@ -347,17 +295,12 @@ async def change_password(
             detail="New password must be different from current password"
         )
     
-    # Hash and save new password
     current_user.password = PasswordManager.hash_password(password_data.new_password)
     current_user.updated_at = datetime.now(timezone.utc)
     db.commit()
     
     return {"message": "Password changed successfully", "success": True}
 
-
-# =============================================================================
-# Current User Info
-# =============================================================================
 
 @router.get(
     "/me",
@@ -366,14 +309,6 @@ async def change_password(
     description="Get the currently authenticated user's profile information."
 )
 async def get_me(current_user: models.User = Depends(get_current_user)):
-    """
-    Return current user's profile.
-    
-    This endpoint is useful for:
-    - Verifying token is valid
-    - Getting user profile after login
-    - Checking assigned roles
-    """
     return current_user
 
 
@@ -389,12 +324,6 @@ async def get_me(current_user: models.User = Depends(get_current_user)):
     """
 )
 async def logout(current_user: models.User = Depends(get_current_user)):
-    """
-    Logout endpoint.
-    
-    In a stateless JWT system, the client should simply discard the token.
-    For additional security, implement token blacklisting.
-    """
     return {
         "message": "Successfully logged out. Please discard your tokens.",
         "success": True

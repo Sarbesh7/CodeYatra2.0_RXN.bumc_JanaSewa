@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
           setUser(userData);
           setIsAuthenticated(true);
         } catch (error) {
-          // Token is invalid, clear it
+
           localStorage.removeItem('access_token');
           localStorage.removeItem('user_role');
           localStorage.removeItem('user_name');
@@ -34,7 +34,6 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('access_token', response.access_token);
     localStorage.setItem('user_role', response.role);
     localStorage.setItem('user_name', response.user_name);
-    
     
     const userData = await authAPI.getMe();
     setUser(userData);

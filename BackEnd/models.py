@@ -23,10 +23,9 @@ class User(Base):
     email = Column(String(255), unique=True, index=True, nullable=False)
     password = Column(String(255), nullable=False)
     phone = Column(String(20), nullable=True)
-    role = Column(String(20), default="citizen")  # citizen, admin
+    role = Column(String(20), default="citizen")
     created_at = Column(DateTime, default=datetime.utcnow)
     
-    # Relationships
     applications = relationship("Application", back_populates="user")
     complaints = relationship("Complaint", back_populates="user")
 
@@ -37,14 +36,13 @@ class Service(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(255), nullable=False)
     description = Column(Text, nullable=True)
-    required_documents = Column(JSON, default=list)  # List of required documents
-    office_type = Column(String(100), nullable=False)  # ward, dao, yatayat, passport, tax, municipality
+    required_documents = Column(JSON, default=list)
+    office_type = Column(String(100), nullable=False)
     fee = Column(Float, default=0.0)
     estimated_days = Column(Integer, default=7)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     
-    # Relationships
     applications = relationship("Application", back_populates="service")
 
 
@@ -56,7 +54,6 @@ class Application(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     service_id = Column(Integer, ForeignKey("services.id"), nullable=False)
     
-    # Applicant Details
     applicant_name = Column(String(255), nullable=False)
     applicant_address = Column(String(500), nullable=True)
     district = Column(String(100), nullable=True)
@@ -64,23 +61,18 @@ class Application(Base):
     ward_no = Column(Integer, nullable=True)
     phone = Column(String(20), nullable=True)
     
-    # Application specific data stored as JSON
     form_data = Column(JSON, default=dict)
     
-    # Document uploads (paths)
-    documents = Column(JSON, default=list)  # List of uploaded file paths
+    documents = Column(JSON, default=list)
     
-    # Status tracking
-    status = Column(String(50), default="Submitted")  # Submitted, Under Review, Approved, Rejected
+    status = Column(String(50), default="Submitted")
     remarks = Column(Text, nullable=True)
     admin_remarks = Column(Text, nullable=True)
-    official_document_path = Column(String(500), nullable=True)  # Path to approved PDF
+    official_document_path = Column(String(500), nullable=True)
     
-    # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
-    # Relationships
     user = relationship("User", back_populates="applications")
     service = relationship("Service", back_populates="applications")
 
@@ -94,12 +86,11 @@ class Complaint(Base):
     subject = Column(String(255), nullable=False)
     description = Column(Text, nullable=False)
     attachment_path = Column(String(500), nullable=True)
-    status = Column(String(50), default="Pending")  # Pending, Under Review, Resolved, Closed
+    status = Column(String(50), default="Pending")
     admin_response = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
-    # Relationships
     user = relationship("User", back_populates="complaints")
 
 

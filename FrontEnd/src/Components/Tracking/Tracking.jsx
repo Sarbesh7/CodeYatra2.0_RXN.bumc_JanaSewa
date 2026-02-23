@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import "../../Styles/TrackApplication.css";
 import { FaSearch } from "react-icons/fa";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function TrackApplication() {
   const [serialNumber, setSerialNumber] = useState("");
+  const { t } = useLanguage();
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Tracking:", serialNumber);
@@ -12,15 +15,15 @@ export default function TrackApplication() {
 
   return (
     <div className="track-container Container">
-      <h1 className="track-title">Track Your Application</h1>
+      <h1 className="track-title">{t.trackYourApplication}</h1>
 
       <div className="track-card">
         <form onSubmit={handleSubmit} className="track-form">
-          <label className="track-label">Application Serial Number</label>
+          <label className="track-label">{t.applicationSerialNumber}</label>
           <div className="input-group">
             <input
               type="text"
-              placeholder="e.g. JS-12345678"
+              placeholder={t.serialPlaceholder}
               value={serialNumber}
               onChange={(e) => setSerialNumber(e.target.value)}
               className="track-input"
@@ -28,7 +31,7 @@ export default function TrackApplication() {
             />
 
             <button type="submit" className="track-button">
-             <FaSearch  className="mr-1 text-sm"/>  Track
+             <FaSearch  className="mr-1 text-sm"/>  {t.track}
             </button>
           </div>
         </form>

@@ -3,8 +3,6 @@ from typing import Optional, List, Any
 from datetime import date, datetime
 
 
-# ==================== USER SCHEMAS ====================
-
 class UserCreate(BaseModel):
     full_name: str
     email: str
@@ -35,8 +33,6 @@ class Token(BaseModel):
     user_id: int
     user_name: str
 
-
-# ==================== SERVICE SCHEMAS ====================
 
 class ServiceCreate(BaseModel):
     title: str
@@ -69,8 +65,6 @@ class ServiceResponse(BaseModel):
     created_at: datetime
     model_config = ConfigDict(from_attributes=True)
 
-
-# ==================== APPLICATION SCHEMAS ====================
 
 class ApplicationCreate(BaseModel):
     service_id: int
@@ -126,8 +120,6 @@ class TrackingResponse(BaseModel):
     official_document_path: Optional[str] = None
 
 
-# ==================== COMPLAINT SCHEMAS ====================
-
 class ComplaintCreate(BaseModel):
     office_type: str
     subject: str
@@ -152,8 +144,6 @@ class ComplaintResponse(BaseModel):
     updated_at: datetime
     model_config = ConfigDict(from_attributes=True)
 
-
-# ==================== NOTICE SCHEMAS ====================
 
 class NoticeCreate(BaseModel):
     title: str
@@ -181,8 +171,6 @@ class NoticeResponse(BaseModel):
     created_at: datetime
     model_config = ConfigDict(from_attributes=True)
 
-
-# ==================== DASHBOARD STATS ====================
 
 class AdminStats(BaseModel):
     total_users: int
